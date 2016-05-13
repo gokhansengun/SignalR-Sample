@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace SignalRSample.EventGenerator
 {
@@ -46,7 +47,8 @@ namespace SignalRSample.EventGenerator
 
             hubConnection.Start().Wait();
 
-            Console.ReadLine();
+            // wait until process receives a signal
+            new ManualResetEvent(false).WaitOne();
         }
     }
 }

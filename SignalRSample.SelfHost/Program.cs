@@ -19,8 +19,9 @@ namespace SignalRSample.SelfHost
             using (WebApp.Start(url))
             {
                 Console.WriteLine("Server running on {0}", url);
-
-                Console.ReadLine();
+                
+                // wait until process receives a signal
+                new ManualResetEvent(false).WaitOne();
             }
         }
     }
