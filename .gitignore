@@ -1,0 +1,11 @@
+SignalRSample.ClientConsole/bin/
+SignalRSample.ClientConsole/obj/
+SignalRSample.SelfHost/bin/
+SignalRSample.SelfHost/obj/
+SignalRSample.Common/bin/
+SignalRSample.Common/obj/
+SignalRSample.EventGenerator/bin/
+SignalRSample.EventGenerator/obj/
+*.user
+packages/
+.vs/
