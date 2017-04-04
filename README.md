@@ -18,7 +18,7 @@ Projects:
 
 * SignalRSample.SelfHost
 * SignalRSample.ClientConsole
-* SignalRSample.EventGenerator
+* SignalRSample.EventEmitter
 * SignalRSample.Common
 
 TODO:

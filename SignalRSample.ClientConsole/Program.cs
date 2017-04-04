@@ -40,8 +40,8 @@ namespace SignalRSample.ClientConsole
 
                     IHubProxy hubProxy = srClient.Setup();
 
-                    srClient.EnterLoop(hubProxy).Wait();
-
+                    new ManualResetEvent(false).WaitOne();
+                    
                     srClient.TearDown();
 
                 }, TaskCreationOptions.LongRunning);

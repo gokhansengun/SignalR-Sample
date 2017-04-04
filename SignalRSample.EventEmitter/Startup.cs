@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Owin;
 using System.Web.Http;
 
-namespace SignalRSample.EventGenerator
+namespace SignalRSample.EventEmitter
 {
     public class Startup
     {

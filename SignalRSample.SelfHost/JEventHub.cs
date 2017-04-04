@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SignalRSample.Common;
 
-namespace SignalRSample.Common
+namespace SignalRSample.SelfHost
 {
     public class JEventHub : Hub
     {
@@ -30,11 +31,11 @@ namespace SignalRSample.Common
             Clients.All.deregisterFromEvents(registrationParameters);
         }
 
-        public void BroadcastEvent(string roomId, string channelId, string eventText)
+        public void BroadcastEvent(string roomId, string eventBody)
         {
-            Console.WriteLine("Hub received BroadcastEvent msg with roomId: {0} and channelId: {1}", roomId, channelId);
+            Console.WriteLine("Hub received BroadcastEvent msg with roomId: {0} and eventBody: {1}", roomId, eventBody);
 
-            Clients.Group(roomId).broadcastEvent(roomId, channelId, eventText);
+            Clients.Group(roomId).broadcastEvent(roomId, eventBody);
         }
 
         public void BroadcastEventsComplete(string roomId, string channelId)

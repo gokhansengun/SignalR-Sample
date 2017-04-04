@@ -4,8 +4,8 @@ SignalRSample.SelfHost/bin/
 SignalRSample.SelfHost/obj/
 SignalRSample.Common/bin/
 SignalRSample.Common/obj/
-SignalRSample.EventGenerator/bin/
-SignalRSample.EventGenerator/obj/
+SignalRSample.EventEmitter/bin/
+SignalRSample.EventEmitter/obj/
 *.user
 packages/
 .vs/
