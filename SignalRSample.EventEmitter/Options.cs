@@ -10,7 +10,7 @@ namespace SignalRSample.EventEmitter
             HelpText = "Group Id.")]
         public string GroupId { get; set; }
 
-        [Option('e', "event", DefaultValue = true,
+        [Option('e', "event", Required = true,
             HelpText = "Event Type, CALL_ARRIVED, CALL_ANSWERED, etc.")]
         public bool EventType { get; set; }
 
