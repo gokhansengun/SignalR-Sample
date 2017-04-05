@@ -12,7 +12,7 @@ namespace SignalRSample.EventEmitter
 
         [Option('e', "event", Required = true,
             HelpText = "Event Type, CALL_ARRIVED, CALL_ANSWERED, etc.")]
-        public bool EventType { get; set; }
+        public string EventType { get; set; }
 
         [ParserState]
         public IParserState LastParserState { get; set; }
@@ -24,5 +24,4 @@ namespace SignalRSample.EventEmitter
                 current => HelpText.DefaultParsingErrorsHandler(this, current));
         }
     }
-
 }
