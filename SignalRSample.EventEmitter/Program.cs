@@ -33,7 +33,7 @@ namespace SignalRSample.EventEmitter
 
                 hubConnection.Start().Wait();
 
-                var hubEvent = HubEvent.HubEventUnknown;
+                HubEvent hubEvent;
 
                 if (!Enum.TryParse(options.EventType, out hubEvent))
                 {
