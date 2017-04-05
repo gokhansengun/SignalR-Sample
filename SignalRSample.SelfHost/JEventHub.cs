@@ -1,38 +1,50 @@
 ﻿using Microsoft.AspNet.SignalR;
-using System;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace SignalRSample.SelfHost
 {
     public class JEventHub : Hub
     {
-        public void BroadcastEvent(string roomId, string eventBody)
+        public void JoinGroup(string groupName)
         {
-            Console.WriteLine("Hub received BroadcastEvent msg with roomId: {0} and eventBody: {1}", roomId, eventBody);
+            Log.Debug($"JoinGroup - {Context.ConnectionId}");
 
-            Clients.Group(roomId).broadcastEvent(roomId, eventBody);
+            Groups.Add(Context.ConnectionId, groupName);
+        }
+
+        public void LeaveGroup(string groupName)
+        {
+            Log.Debug($"LeaveGroup - {Context.ConnectionId}");
+
+            Groups.Remove(Context.ConnectionId, groupName);
+        }
+
+        public void BroadcastEvent(string groupName, string eventBody)
+        {
+            Log.Debug($"BroadcastEvent - {Context.ConnectionId} - groupId: {groupName}, eventBody: {eventBody}");
+
+            Clients.Group(groupName).broadcastEvent(groupName, eventBody);
         }
         
-        public void MsgClientHello(string roomId, string welcomeMsg)
-        {
-            Console.WriteLine("Hub received test hello: {0}", welcomeMsg);
-        }
-
         public override Task OnConnected()
         {
-            Console.WriteLine("Hub OnConnected {0}", Context.ConnectionId);
+            Log.Debug($"OnConnected - {Context.ConnectionId}");
+
             return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            Console.WriteLine("Hub OnDisconnected {0}", Context.ConnectionId);
+            Log.Debug($"OnDisconnected - {Context.ConnectionId}");
+
             return base.OnDisconnected(stopCalled);
         }
 
         public override Task OnReconnected()
         {
-            Console.WriteLine("Hub OnReconnected {0}", Context.ConnectionId);
+            Log.Debug($"OnReconnected - {Context.ConnectionId}");
+
             return base.OnReconnected();
         }
     }

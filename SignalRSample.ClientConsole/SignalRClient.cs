@@ -1,66 +1,74 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
 using System;
+using System.Threading.Tasks;
+using Serilog;
 
 namespace SignalRSample.ClientConsole
 {
     public class SignalRClient : IDisposable
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string ServerUrl { get; set; }
 
-        public string Description { get; set; }
+        private string _hubId;
 
-        public string RegisteredHubId { get; set; }
-
-        public int RegisteredRoomId { get; set; }
+        private string _groupId;
 
         private HubConnection _hubConnection;
 
         private IHubProxy _hubProxy;
 
-        public IHubProxy Setup()
+        public async Task<IHubProxy> Setup(string hubId, string groupId)
         {
-            Console.WriteLine("Starting SignalR Client at Url: {0}, Hub: {1}, Room: {2}",
-                ServerUrl, RegisteredHubId, RegisteredRoomId);
+            Log.Debug("Starting SignalR Client at Url: {0}, Hub: {1}, Group: {2}",
+                ServerUrl, hubId, groupId);
 
-            return SetupHubProxy(ServerUrl, RegisteredHubId);
+            _groupId = groupId;
+            _hubId = hubId;
+
+            Log.Debug($"Joining the group {groupId} now");
+
+            var hubProxy = await SetupHubProxy(ServerUrl);
+
+            await hubProxy.Invoke("joinGroup", groupId);
+
+            Log.Debug($"Joined the group {groupId}");
+
+            return hubProxy;
         }
 
-        public void TearDown()
+        public async Task TearDown()
         {
+            Log.Debug($"Leaving the group {_groupId} now");
+
+            await _hubProxy.Invoke("leaveGroup", _groupId);
+
+            Log.Debug($"Left the group {_groupId}");
+
             Dispose();
         }
         
-        public void Dispose()
-        {
-            if (_hubConnection != null)
-            {
-                _hubConnection.Stop();
-            }
-        }
-
-        private IHubProxy SetupHubProxy(string url, string hubId)
+        private async Task<IHubProxy> SetupHubProxy(string url)
         {
             _hubConnection = new HubConnection(url);
 
-            _hubProxy = _hubConnection.CreateHubProxy(hubId);
-
-            _hubProxy.On<string>("msgClientHello",
-                (message) =>
-                    Console.WriteLine("Recieved msgClientHello: " + message));
-
+            _hubProxy = _hubConnection.CreateHubProxy(_hubId);
+            
             _hubProxy.On<string>("broadcastEvent",
                 (eventBody) =>
                 {
-                    Console.WriteLine("Received broadcastEvent: {0}", eventBody);
+                    Log.Debug("Received broadcastEvent: {0}", eventBody);
                 });
 
-
-            // TODO: gseng - get rid of Wait and let it be async
-            _hubConnection.Start().Wait();
+            await _hubConnection.Start();
 
             return _hubProxy;
+        }
+
+        public void Dispose()
+        {
+            _hubConnection?.Stop();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Configuration;
+using Serilog;
 
 namespace SignalRSample.ClientConsole
 {
@@ -9,32 +9,32 @@ namespace SignalRSample.ClientConsole
     {
         static void Main()
         {
-            string url = ConfigurationManager.AppSettings["HubUrl"];
-            string hubId = ConfigurationManager.AppSettings["HubId"];
+            var url = ConfigurationManager.AppSettings["HubUrl"];
+            var hubId = ConfigurationManager.AppSettings["HubId"];
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.ColoredConsole()
+                .CreateLogger();
 
             const int noOfClients = 1;
-            List<Task> listOfTasks = new List<Task>();
+            var listOfTasks = new List<Task>();
 
-            for (int i = 0; i < noOfClients; ++i)
+            for (var i = 0; i < noOfClients; ++i)
             {
-                int clientId = i;
+                var clientId = i.ToString("0000");
 
                 var tsk = new Task(() =>
                 {
                     var srClient = new SignalRClient
                     {
-                        Description = $"SignalR client with id: {clientId}",
                         Id = clientId,
-                        RegisteredHubId = hubId,
-                        RegisteredRoomId = clientId,
                         ServerUrl = url
                     };
 
-                    srClient.Setup();
+                    srClient.Setup(hubId, clientId).Wait();
 
-                    new ManualResetEvent(false).WaitOne();
-                    
-                    srClient.TearDown();
+                    srClient.TearDown().Wait();
 
                 }, TaskCreationOptions.LongRunning);
 
