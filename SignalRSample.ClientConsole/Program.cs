@@ -1,44 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Client;
-using Newtonsoft.Json;
 using System.Threading;
-using System.Diagnostics;
-using SignalRSample.Common;
 using System.Configuration;
 
 namespace SignalRSample.ClientConsole
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            string url = ConfigurationManager.AppSettings["HubUrl"].ToString();
-            string hubId = ConfigurationManager.AppSettings["HubId"].ToString();
+            string url = ConfigurationManager.AppSettings["HubUrl"];
+            string hubId = ConfigurationManager.AppSettings["HubId"];
 
-            const int NO_OF_CLIENTS = 1;
+            const int noOfClients = 1;
             List<Task> listOfTasks = new List<Task>();
 
-            for (int i = 0; i < NO_OF_CLIENTS; ++i)
+            for (int i = 0; i < noOfClients; ++i)
             {
                 int clientId = i;
 
-                Task tsk = new Task(() =>
+                var tsk = new Task(() =>
                 {
-                    SignalRClient srClient = new SignalRClient
+                    var srClient = new SignalRClient
                     {
-                        Description = string.Format("SignalR client with id: {0}", clientId),
+                        Description = $"SignalR client with id: {clientId}",
                         Id = clientId,
                         RegisteredHubId = hubId,
                         RegisteredRoomId = clientId,
                         ServerUrl = url
                     };
 
-                    IHubProxy hubProxy = srClient.Setup();
+                    srClient.Setup();
 
                     new ManualResetEvent(false).WaitOne();
                     

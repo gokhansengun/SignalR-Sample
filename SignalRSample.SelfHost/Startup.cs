@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Cors;
@@ -27,12 +25,12 @@ namespace SignalRSample.SelfHost
                     // JSONP requests are insecure but some older browsers (and some
                     // versions of IE) require JSONP to work cross domain
                     // EnableJSONP = true
+                    EnableDetailedErrors = true
                 };
                 // Run the SignalR pipeline. We're not using MapSignalR
                 // since this branch already runs under the "/signalr"
                 // path.
-
-                hubConfiguration.EnableDetailedErrors = true;
+                
                 map.RunSignalR(hubConfiguration);
             });
         }

@@ -1,23 +1,17 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
-using SignalRSample.Common;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
 using CommandLine;
-using CommandLine.Text;
 
 namespace SignalRSample.EventEmitter
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            string url = ConfigurationManager.AppSettings["HubUrl"].ToString();
-            string hubId = ConfigurationManager.AppSettings["HubId"].ToString();
+            var url = ConfigurationManager.AppSettings["HubUrl"];
+            var hubId = ConfigurationManager.AppSettings["HubId"];
 
             var options = new Options();
             if (!Parser.Default.ParseArguments(args, options))
@@ -32,8 +26,9 @@ namespace SignalRSample.EventEmitter
 
                 hubConnection.Start().Wait();
 
-                Task eventTask = null;
+                Task eventTask;
                 
+                // TODO: gseng - switch the mock event according to the event passed from the command line
                 eventTask = hubProxy.Invoke("broadcastEvent", options.GroupId, GenerateCallArrivedEvent());
 
                 Task.WaitAll(eventTask);
@@ -41,6 +36,7 @@ namespace SignalRSample.EventEmitter
                 if (eventTask.IsFaulted)
                 {
                     Console.WriteLine("An error occurred and event could not be sent!");
+                    Environment.Exit(1);
                 }
 
                 Console.WriteLine("Event sent and ACKed successfully.");

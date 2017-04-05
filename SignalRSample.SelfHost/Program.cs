@@ -1,20 +1,15 @@
 ﻿using System;
-using Microsoft.AspNet.SignalR;
 using Microsoft.Owin.Hosting;
-using Owin;
-using Microsoft.Owin.Cors;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.Threading;
 using System.Configuration;
 
 namespace SignalRSample.SelfHost
 {
-    class Program
+    static class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            string url = ConfigurationManager.AppSettings["HubUrl"].ToString();
+            var url = ConfigurationManager.AppSettings["HubUrl"];
 
             using (WebApp.Start(url))
             {

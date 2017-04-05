@@ -1,12 +1,5 @@
 ﻿using Microsoft.AspNet.SignalR.Client;
-using Newtonsoft.Json;
-using SignalRSample.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SignalRSample.ClientConsole
 {
@@ -22,9 +15,9 @@ namespace SignalRSample.ClientConsole
 
         public int RegisteredRoomId { get; set; }
 
-        private HubConnection _hubConnection = null;
+        private HubConnection _hubConnection;
 
-        private IHubProxy _hubProxy = null;
+        private IHubProxy _hubProxy;
 
         public IHubProxy Setup()
         {
